@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:surgery_picker/screens/patient_display_screen.dart';
 
 class EntryScreen extends StatelessWidget {
   const EntryScreen({super.key});
@@ -19,7 +20,8 @@ class EntryScreen extends StatelessWidget {
                     child: Text(
                       "مرحبا بك في تطبيق حجز العمليات العيون",
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.w500),
                     )),
                 const SizedBox(
                   height: 150,
@@ -52,8 +54,10 @@ class EntryScreen extends StatelessWidget {
                   width: 200,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text("بحث",style: TextStyle(fontSize: 20),),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> PatientDisplayScreen()));
+                    },
+                    child: const Text("بحث", style: TextStyle(fontSize: 20),),
                   ),
                 )
               ],
