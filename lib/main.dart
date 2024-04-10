@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'color_schemes.g.dart';
 
@@ -27,21 +26,24 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 2,
-          title: Text("Material Theme Builder"),
+      appBar: AppBar(
+        elevation: 2,
+        title: Text("Material Theme Builder"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Update with your UI',
+            ),
+          ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Update with your UI',
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton:
-            FloatingActionButton(onPressed: () => {}, tooltip: 'Increment'));
+      ),
+      floatingActionButton:
+          FloatingActionButton(
+            child: Icon(Icons.add),
+              onPressed: () => {}, tooltip: 'Increment'),
+    );
   }
-}    
+}
