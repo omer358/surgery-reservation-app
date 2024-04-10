@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'color_schemes.g.dart';
+import 'package:surgery_picker/screens/entry_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,38 +12,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      home: const Home(),
-    );
-  }
-}
-
-class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 2,
-        title: Text("Material Theme Builder"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Update with your UI',
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton:
-          FloatingActionButton(
-            child: Icon(Icons.add),
-              onPressed: () => {}, tooltip: 'Increment'),
+      theme: ThemeData(useMaterial3: true, colorScheme: const ColorScheme.light()),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: const ColorScheme.dark()),
+      locale: const Locale('ar'), // English language code with LTR direction
+      home: const EntryScreen(),
     );
   }
 }
