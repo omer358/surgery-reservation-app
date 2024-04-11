@@ -1,9 +1,11 @@
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:surgery_picker/models/patient_model.dart';
 import 'package:surgery_picker/services/notification_service.dart';
 
 class PatientDisplayScreen extends StatelessWidget {
-  const PatientDisplayScreen({super.key});
+  final PatientModel patientModel;
+   const PatientDisplayScreen({super.key, required this.patientModel});
 
   @override
   Widget build(BuildContext context) {
@@ -23,36 +25,36 @@ class PatientDisplayScreen extends StatelessWidget {
                 "بيانات المريض الأساسية: ",
                 style: TextStyle(fontSize: 24),
               ),
-              const Card(
-                margin: EdgeInsets.all(8),
+               Card(
+                margin: const EdgeInsets.all(8),
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             "الرقم التعريفي: ",
                             style: TextStyle(fontSize: 20),
                           ),
                           Text(
-                            "1234",
-                            style: TextStyle(fontSize: 20),
+                            patientModel.id,
+                            style: const TextStyle(fontSize: 20),
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             "الأسم: ",
                             style: TextStyle(fontSize: 20),
                           ),
                           Text(
-                            "عمر مكي ",
-                            style: TextStyle(fontSize: 20),
+                            patientModel.name,
+                            style: const TextStyle(fontSize: 20),
                           ),
                         ],
                       ),
@@ -75,41 +77,41 @@ class PatientDisplayScreen extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             "العملية المحددة: ",
                             style: TextStyle(fontSize: 20),
                           ),
                           Text(
-                            "ACL Tear",
-                            style: TextStyle(fontSize: 20),
+                            patientModel.surgeryType,
+                            style: const TextStyle(fontSize: 20),
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             "الطبيب: ",
                             style: TextStyle(fontSize: 18),
                           ),
                           Text(
-                            "محمد علي سعد",
-                            style: TextStyle(fontSize: 18),
+                            patientModel.doctor,
+                            style: const TextStyle(fontSize: 18),
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             "تاريخ العملية: ",
                             style: TextStyle(fontSize: 18),
                           ),
                           Text(
-                            "غير محدد",
-                            style: TextStyle(fontSize: 18),
+                            patientModel.specifiedDate,
+                            style: const TextStyle(fontSize: 18),
                           ),
                         ],
                       ),

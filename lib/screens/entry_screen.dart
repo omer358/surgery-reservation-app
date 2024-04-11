@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:surgery_picker/models/patient_model.dart';
+import 'package:surgery_picker/screens/patient_display_screen.dart';
 import 'package:surgery_picker/services/firestore_service.dart';
 
 import '../constants.dart';
@@ -64,7 +66,14 @@ class EntryScreen extends StatelessWidget {
                           .getDocumentById(
                               patientsCollection, patientIdController.text);
                       if (patientById != null) {
-                        print(patientById.data() as Map<String, dynamic>);
+                        PatientModel patient =
+                            PatientModel.fromSnapshot(patientById);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PatientDisplayScreen(
+                                      patientModel: patient,
+                                    )));
                       }
                     },
                     child: const Text(
