@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "676411606400",
+    "project_id": "surgery-reservation-app",
+    "storage_bucket": "surgery-reservation-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:676411606400:android:e5d7b849d8182da59c6d65",
+        "android_client_info": {
+          "package_name": "com.example.surgery_picker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1W3yORYGfgjgaQbLptKKbMx6RqoFaEMY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
