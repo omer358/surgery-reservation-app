@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:surgery_picker/firebase_options.dart';
 import 'package:surgery_picker/screens/entry_screen.dart';
 import 'package:surgery_picker/services/notification_service.dart';
 
@@ -8,6 +10,9 @@ import 'package:surgery_picker/services/notification_service.dart';
 Future<void> main() async{
   // needed if you intend to initialize in the `main` function
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
   NotificationService().initNotification();
 
   runApp(const MyApp());
