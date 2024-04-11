@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter_native_splash: ^2.4.0
   flutter_svg: ^2.0.10+1
+  date_picker_plus: ^3.0.2
+  flutter_local_notifications: ^17.0.0
 
 dev_dependencies:
   flutter_test:

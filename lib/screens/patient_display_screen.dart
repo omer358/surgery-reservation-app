@@ -1,3 +1,4 @@
+import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 
 class PatientDisplayScreen extends StatelessWidget {
@@ -116,7 +117,14 @@ class PatientDisplayScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox( height: 20,),
-              ElevatedButton(onPressed: (){}, child: const Text("تحديد موعد العملية"))
+              ElevatedButton(onPressed: () async{
+                final date = await showRangePickerDialog(
+                  context: context,
+                  minDate: DateTime(2021, 1, 1),
+                  maxDate: DateTime(2023, 12, 31),
+                );
+                print(date);
+              }, child: const Text("تحديد موعد العملية"))
             ],
           ),
         ),
