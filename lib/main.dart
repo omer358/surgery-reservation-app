@@ -1,7 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:surgery_picker/screens/entry_screen.dart';
+import 'package:surgery_picker/services/notification_service.dart';
 
-void main() {
+
+Future<void> main() async{
+  // needed if you intend to initialize in the `main` function
+  WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
+
   runApp(const MyApp());
 }
 

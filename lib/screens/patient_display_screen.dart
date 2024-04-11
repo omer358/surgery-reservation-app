@@ -1,5 +1,6 @@
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:surgery_picker/services/notification_service.dart';
 
 class PatientDisplayScreen extends StatelessWidget {
   const PatientDisplayScreen({super.key});
@@ -123,7 +124,7 @@ class PatientDisplayScreen extends StatelessWidget {
                   minDate: DateTime(2021, 1, 1),
                   maxDate: DateTime(2023, 12, 31),
                 );
-                print(date);
+                NotificationService().showNotification(title: "زمن العملية", body: date.toString());
               }, child: const Text("تحديد موعد العملية"))
             ],
           ),
