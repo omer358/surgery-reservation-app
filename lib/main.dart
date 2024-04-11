@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)),
       darkTheme: ThemeData(colorScheme: const ColorScheme.dark()),
       locale: const Locale('ar'), // English language code with LTR direction
-      home: const EntryScreen(),
+      home:  EntryScreen(),
     );
   }
 }
