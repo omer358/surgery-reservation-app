@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue), fontFamily: "Rubik"),
-      darkTheme: ThemeData(colorScheme: const ColorScheme.dark()),
+      darkTheme: ThemeData(colorScheme: const ColorScheme.dark(), fontFamily: "Rubik"),
       locale: const Locale('ar'), // English language code with LTR direction
       home:  EntryScreen(),
     );
