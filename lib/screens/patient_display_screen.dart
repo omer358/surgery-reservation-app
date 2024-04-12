@@ -5,7 +5,8 @@ import 'package:surgery_picker/services/notification_service.dart';
 
 class PatientDisplayScreen extends StatelessWidget {
   final PatientModel patientModel;
-   const PatientDisplayScreen({super.key, required this.patientModel});
+
+  const PatientDisplayScreen({super.key, required this.patientModel});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class PatientDisplayScreen extends StatelessWidget {
                 "بيانات المريض الأساسية: ",
                 style: TextStyle(fontSize: 24),
               ),
-               Card(
+              Card(
                 margin: const EdgeInsets.all(8),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -73,7 +74,7 @@ class PatientDisplayScreen extends StatelessWidget {
                 margin: const EdgeInsets.all(8),
                 child: Container(
                   padding: const EdgeInsets.all(8),
-                  child:  Column(
+                  child: Column(
                     children: [
                       Row(
                         children: [
@@ -110,7 +111,9 @@ class PatientDisplayScreen extends StatelessWidget {
                             style: TextStyle(fontSize: 18),
                           ),
                           Text(
-                            patientModel.specifiedDate,
+                            patientModel.specifiedDate.isEmpty
+                                ? "غير مُحدد"
+                                : patientModel.specifiedDate,
                             style: const TextStyle(fontSize: 18),
                           ),
                         ],
@@ -119,15 +122,20 @@ class PatientDisplayScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox( height: 20,),
-              ElevatedButton(onPressed: () async{
-                final date = await showRangePickerDialog(
-                  context: context,
-                  minDate: DateTime(2021, 1, 1),
-                  maxDate: DateTime(2023, 12, 31),
-                );
-                NotificationService().showNotification(title: "زمن العملية", body: date.toString());
-              }, child: const Text("تحديد موعد العملية"))
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    final date = await showRangePickerDialog(
+                      context: context,
+                      minDate: DateTime(2021, 1, 1),
+                      maxDate: DateTime(2023, 12, 31),
+                    );
+                    NotificationService().showNotification(
+                        title: "زمن العملية", body: date.toString());
+                  },
+                  child: const Text("تحديد موعد العملية"))
             ],
           ),
         ),
