@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:surgery_picker/models/patient_model.dart';
-import 'package:surgery_picker/screens/patient_display_screen.dart';
-import 'package:surgery_picker/services/firestore_service.dart';
-
-import '../constants.dart';
+import 'package:get/get.dart';
+import 'package:surgery_picker/controllers/entry_screen_controller.dart';
 
 class EntryScreen extends StatelessWidget {
-  EntryScreen({super.key});
+  final EntryScreenController controller = Get.put(EntryScreenController());
 
-  TextEditingController patientIdController = TextEditingController();
+   EntryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,72 +19,91 @@ class EntryScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Text(
-                      "مرحبا بك في تطبيق حجز العمليات العيون",
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
-                    )),
                 const SizedBox(
-                  height: 150,
+                  height: 100,
                 ),
-                SvgPicture.asset(
-                  "assets/images/medical.svg",
-                  width: 200,
-                  height: 200,
-                  fit: BoxFit.contain,
-                ),
+                _buildHeaderText(),
                 const SizedBox(
                   height: 20,
                 ),
-                TextField(
-                  controller: patientIdController,
-                  textDirection: TextDirection.rtl,
-                  decoration: InputDecoration(
-                    hintTextDirection: TextDirection.rtl,
-                    hintText: 'ادخل رقم المريض التعريفي ',
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 15.0, horizontal: 20.0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                ),
+                _buildSvgImage(),
                 const SizedBox(
                   height: 20,
                 ),
-                Container(
-                  width: 200,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      var patientById = await FireStoreService()
-                          .getDocumentById(
-                              patientsCollection, patientIdController.text);
-                      if (patientById != null) {
-                        PatientModel patient =
-                            PatientModel.fromSnapshot(patientById);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PatientDisplayScreen(
-                                      patientModel: patient,
-                                    )));
-                      }
-                    },
-                    child: const Text(
-                      "بحث",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                )
+                _buildTextField(),
+                const SizedBox(height: 20),
+                _buildSearchButton(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildHeaderText() {
+    return const Directionality(
+      textDirection: TextDirection.rtl,
+      child: Text(
+        "مرحبا بك في تطبيق حجز العمليات العيون",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+
+  Widget _buildSvgImage() {
+    return SvgPicture.asset(
+      "assets/images/medical.svg",
+      width: 200,
+      height: 200,
+      fit: BoxFit.contain,
+    );
+  }
+
+  Widget _buildTextField() {
+    return TextField(
+      controller: controller.patientIdController,
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly,
+      ],
+      textDirection: TextDirection.rtl,
+      onTap: controller.resetButtonClicked,
+      decoration: InputDecoration(
+        hintTextDirection: TextDirection.rtl,
+        hintText: 'ادخل رقم المريض التعريفي ',
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 15.0,
+          horizontal: 20.0,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        // Show error message only when button is clicked
+        errorText: controller.buttonClicked.value &&
+                (controller.patientIdController.text.isEmpty ||
+                    double.tryParse(controller.patientIdController.text) ==
+                        null)
+            ? 'يجب إدخال رقم المريض التعريفي أولاً'
+            : null,
+      ),
+    );
+  }
+
+  Widget _buildSearchButton() {
+    return Obx(() => controller.isLoading.value
+        ? const CircularProgressIndicator()
+        : SizedBox(
+            width: 200,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: controller.handleSearch,
+              child: const Text(
+                "بحث",
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+          ));
   }
 }

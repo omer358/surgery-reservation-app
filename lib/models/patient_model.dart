@@ -15,7 +15,8 @@ class PatientModel {
     required this.doctor,
   });
 
-  factory PatientModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+  factory PatientModel.fromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
     Map<String, dynamic> data = snapshot.data()!;
     return PatientModel(
       id: snapshot.id,

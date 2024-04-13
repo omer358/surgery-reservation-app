@@ -23,7 +23,13 @@ class FireStoreService {
     }
   }
 
-  // Get all documents from a collection
+  // Method to get the doctor's data for a patient
+  Future<Map<String, dynamic>?> getDoctorData(String doctorReferencePath) async {
+    DocumentSnapshot doctorSnapshot = await FirebaseFirestore.instance.doc(doctorReferencePath).get();
+    return doctorSnapshot.data() as Map<String, dynamic>;
+  }
+
+// Get all documents from a collection
   Stream<QuerySnapshot<Map<String, dynamic>>> getCollection(
       String collectionName) {
     try {
@@ -50,6 +56,22 @@ class FireStoreService {
       await _firestore.collection(collectionName).doc(documentId).delete();
     } catch (e) {
       print("Error deleting document: $e");
+    }
+  }
+
+  // Get documents by a field attribute
+  Future<List<DocumentSnapshot<Map<String, dynamic>>>> getDocumentsByField(
+      String collectionName, String fieldName, dynamic attributeValue) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
+          .collection(collectionName)
+          .where(fieldName, isEqualTo: attributeValue)
+          .get();
+
+      return snapshot.docs;
+    } catch (e) {
+      print("Error getting documents by field: $e");
+      return [];
     }
   }
 }

@@ -1,14 +1,18 @@
-import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:surgery_picker/controllers/patient_display_controller.dart';
 import 'package:surgery_picker/models/patient_model.dart';
-import 'package:surgery_picker/services/notification_service.dart';
 
 class PatientDisplayScreen extends StatelessWidget {
   final PatientModel patientModel;
-   const PatientDisplayScreen({super.key, required this.patientModel});
+
+  const PatientDisplayScreen({super.key, required this.patientModel});
 
   @override
   Widget build(BuildContext context) {
+    final PatientDisplayController controller =
+        Get.put(PatientDisplayController());
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("بيانات المريض"),
@@ -25,7 +29,7 @@ class PatientDisplayScreen extends StatelessWidget {
                 "بيانات المريض الأساسية: ",
                 style: TextStyle(fontSize: 24),
               ),
-               Card(
+              Card(
                 margin: const EdgeInsets.all(8),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -73,17 +77,17 @@ class PatientDisplayScreen extends StatelessWidget {
                 margin: const EdgeInsets.all(8),
                 child: Container(
                   padding: const EdgeInsets.all(8),
-                  child:  Column(
+                  child: Column(
                     children: [
                       Row(
                         children: [
                           const Text(
                             "العملية المحددة: ",
-                            style: TextStyle(fontSize: 20),
+                            style: TextStyle(fontSize: 16),
                           ),
                           Text(
                             patientModel.surgeryType,
-                            style: const TextStyle(fontSize: 20),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ],
                       ),
@@ -92,11 +96,11 @@ class PatientDisplayScreen extends StatelessWidget {
                         children: [
                           const Text(
                             "الطبيب: ",
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 16),
                           ),
                           Text(
                             patientModel.doctor,
-                            style: const TextStyle(fontSize: 18),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ],
                       ),
@@ -107,11 +111,13 @@ class PatientDisplayScreen extends StatelessWidget {
                         children: [
                           const Text(
                             "تاريخ العملية: ",
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 16),
                           ),
                           Text(
-                            patientModel.specifiedDate,
-                            style: const TextStyle(fontSize: 18),
+                            patientModel.specifiedDate.isEmpty
+                                ? "غير مُحدد"
+                                : patientModel.specifiedDate,
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ],
                       ),
@@ -119,17 +125,62 @@ class PatientDisplayScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox( height: 20,),
-              ElevatedButton(onPressed: () async{
-                final date = await showRangePickerDialog(
-                  context: context,
-                  minDate: DateTime(2021, 1, 1),
-                  maxDate: DateTime(2023, 12, 31),
-                );
-                NotificationService().showNotification(title: "زمن العملية", body: date.toString());
-              }, child: const Text("تحديد موعد العملية"))
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () => _showDatePicker(context),
+                child: const Text("تحديد موعد العملية"),
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showDatePicker(BuildContext context) {
+    final PatientDisplayController controller =
+        Get.find<PatientDisplayController>();
+    controller.fetchData(patientModel.doctor);
+    Get.bottomSheet(
+      Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            const ListTile(
+              title: Text('تواريخ متاحة:'),
+            ),
+            const Divider(),
+            Obx(() => controller.formattedDates.isEmpty
+                ? const CircularProgressIndicator()
+                : ListView.builder(
+                    itemCount: controller.formattedDates.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      String formattedDateTime =
+                          controller.formattedDates[index];
+
+                      // Assuming formattedDateTime is in the format "Month Day, Year"
+                      // You can modify this based on your actual formatted date
+                      String formattedDate = formattedDateTime
+                          .split(' - ')[0]; // Extracting the date
+
+                      // Extracting the time in hours
+                      String formattedTime =
+                          formattedDateTime.split(' - ')[1].split(' ')[0];
+                      return ListTile(
+                        title: Text(formattedDate),
+                        subtitle: Text(formattedTime),
+                        leading: const Icon(Icons.date_range),
+                        onTap: () {
+                          controller.reserveForSurgery(patientModel, index);
+                          Get.back();
+                        },
+                      );
+                    },
+                  )),
+          ],
         ),
       ),
     );

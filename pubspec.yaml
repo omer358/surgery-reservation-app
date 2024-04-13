@@ -41,6 +41,9 @@ dependencies:
   flutter_local_notifications: ^13.0.0
   firebase_core: ^2.29.0
   cloud_firestore: ^4.16.1
+  modal_bottom_sheet: ^3.0.0
+  intl: ^0.19.0
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:
@@ -80,10 +83,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Rubik
+      fonts:
+        - asset: assets/fonts/Rubik-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
