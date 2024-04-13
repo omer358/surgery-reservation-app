@@ -158,9 +158,17 @@ class PatientDisplayScreen extends StatelessWidget {
                     itemCount: controller.formattedDates.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
+                      String formattedDateTime = controller.formattedDates[index];
 
+                      // Assuming formattedDateTime is in the format "Month Day, Year"
+                      // You can modify this based on your actual formatted date
+                      String formattedDate = formattedDateTime.split(' - ')[0]; // Extracting the date
+
+                      // Extracting the time in hours
+                      String formattedTime = formattedDateTime.split(' - ')[1].split(' ')[0];
                       return ListTile(
-                        title: Text(controller.formattedDates[index]),
+                        title: Text(formattedDate),
+                        subtitle: Text(formattedTime),
                         leading: const Icon(Icons.date_range),
                         onTap: () {
                           // Handle date selection

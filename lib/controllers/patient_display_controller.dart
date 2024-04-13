@@ -15,10 +15,8 @@ class PatientDisplayController extends GetxController {
     // Format timestamps
     formattedDates.assignAll(availableDates.map<String>((timestamp) {
       final DateTime dateTime = timestamp.toDate();
-      String formattedDate = DateFormat.yMMMMEEEEd('ar').format(dateTime);
-      return formattedDate;
-      // return intle.DateFormat('EEEE, MMM dd, yyyy').format(dateTime);
+      String formattedDateTime = DateFormat('EEEE, dd MMMM - HH:mm', 'ar').format(dateTime);
+      return formattedDateTime;
     }).toList());
   }
-
 }
