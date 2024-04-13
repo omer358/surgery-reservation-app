@@ -1,26 +1,11 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:surgery_picker/models/patient_model.dart';
-import 'package:surgery_picker/screens/patient_display_screen.dart';
-import 'package:surgery_picker/services/firestore_service.dart';
+import 'package:get/get.dart';
+import 'package:surgery_picker/controllers/entry_screen_controller.dart';
 
-import '../constants.dart';
-
-class EntryScreen extends StatefulWidget {
-  EntryScreen({Key? key}) : super(key: key);
-
-  @override
-  _EntryScreenState createState() => _EntryScreenState();
-}
-
-class _EntryScreenState extends State<EntryScreen> {
-  TextEditingController patientIdController = TextEditingController();
-  bool buttonClicked = false; // Track whether the button has been clicked
-  bool isLoading = false; // Track whether the app is loading
+class EntryScreen extends StatelessWidget {
+  final EntryScreenController controller = Get.put(EntryScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +17,17 @@ class _EntryScreenState extends State<EntryScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 100,),
+                const SizedBox(
+                  height: 100,
+                ),
                 _buildHeaderText(),
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 _buildSvgImage(),
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 _buildTextField(),
                 const SizedBox(height: 20),
                 _buildSearchButton(),
@@ -70,13 +61,13 @@ class _EntryScreenState extends State<EntryScreen> {
 
   Widget _buildTextField() {
     return TextField(
-      controller: patientIdController,
+      controller: controller.patientIdController,
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly,
       ],
       textDirection: TextDirection.rtl,
-      onTap: _resetButtonClicked,
+      onTap: controller.resetButtonClicked,
       decoration: InputDecoration(
         hintTextDirection: TextDirection.rtl,
         hintText: 'ادخل رقم المريض التعريفي ',
@@ -88,9 +79,10 @@ class _EntryScreenState extends State<EntryScreen> {
           borderRadius: BorderRadius.circular(30.0),
         ),
         // Show error message only when button is clicked
-        errorText: buttonClicked &&
-            (patientIdController.text.isEmpty ||
-                double.tryParse(patientIdController.text) == null)
+        errorText: controller.buttonClicked.value &&
+                (controller.patientIdController.text.isEmpty ||
+                    double.tryParse(controller.patientIdController.text) ==
+                        null)
             ? 'يجب إدخال رقم المريض التعريفي أولاً'
             : null,
       ),
@@ -98,74 +90,19 @@ class _EntryScreenState extends State<EntryScreen> {
   }
 
   Widget _buildSearchButton() {
-    return isLoading
+    return Obx(() => controller.isLoading.value
         ? const CircularProgressIndicator()
         : Container(
-      width: 200,
-      height: 50,
-      child: ElevatedButton(
-        onPressed: _handleSearch,
-        child: const Text(
-          "بحث",
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
-    );
-  }
-
-  void _resetButtonClicked() {
-    setState(() {
-      buttonClicked = false;
-    });
-  }
-
-  Future<void> _handleSearch() async {
-    setState(() {
-      buttonClicked = true;
-      isLoading = true;
-    });
-    var patientById = await FireStoreService()
-        .getDocumentById(patientsCollection, patientIdController.text);
-    setState(() {
-      isLoading = false;
-    });
-    if (patientById != null && patientById.exists) {
-      _navigateToPatientDisplayScreen(patientById);
-    } else {
-      log("no patient with this number");
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Directionality(
-            textDirection: TextDirection.rtl,
-            child: AlertDialog(
-              title: const Text("المريض غير موجود"),
-              content: const Text("لا يوجد لدينا مريض بهذا الرقم، تأكد من صحته اولا"),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                  child: const Text("حسناً"),
-                ),
-              ],
+            width: 200,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: controller.handleSearch,
+              child: const Text(
+                "بحث",
+                style: TextStyle(fontSize: 20),
+              ),
             ),
-          );
-        },
-      );
-    }
+          ));
   }
 
-  void _navigateToPatientDisplayScreen(DocumentSnapshot<Map<String, dynamic>> patientSnapshot) {
-    PatientModel patient = PatientModel.fromSnapshot(patientSnapshot);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PatientDisplayScreen(
-          patientModel: patient,
-        ),
-      ),
-    );
-    patientIdController.clear();
-  }
 }

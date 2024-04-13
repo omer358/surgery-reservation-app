@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' as intle;
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:surgery_picker/constants.dart';
+import 'package:get/get.dart';
+import 'package:surgery_picker/controllers/patient_display_controller.dart';
 import 'package:surgery_picker/models/patient_model.dart';
-import 'package:surgery_picker/services/firestore_service.dart';
 
 class PatientDisplayScreen extends StatelessWidget {
   final PatientModel patientModel;
 
-  const PatientDisplayScreen({super.key, required this.patientModel});
+  const PatientDisplayScreen({Key? key, required this.patientModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final PatientDisplayController controller =
+        Get.put(PatientDisplayController());
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("بيانات المريض"),
@@ -128,33 +130,9 @@ class PatientDisplayScreen extends StatelessWidget {
                 height: 20,
               ),
               ElevatedButton(
-                  onPressed: () async {
-                    var fetchData = await _fetchData();
-                    List<dynamic> availableDates = fetchData?["avilable_dates"];
-                    print(availableDates);
-                    // Format timestamps
-                    List<String> formattedDates =
-                        availableDates.map((timestamp) {
-                      DateTime dateTime = timestamp.toDate();
-                      String formattedDate =
-                          intle.DateFormat('EEEE, MMM dd, yyyy').format(dateTime);
-                      return formattedDate;
-                    }).toList();
-                    showMaterialModalBottomSheet(
-                        context: context,
-                        builder: (context) => Container(
-                              padding: const EdgeInsets.all(8),
-                              child: ListView.builder(
-                                  itemBuilder: (buildContext, index) =>
-                                      ListTile(
-                                        title: Text(formattedDates[index]),
-                                        leading: Icon(Icons.date_range),
-                                        onTap: () {},
-                                      ),
-                                  itemCount: formattedDates.length),
-                            ));
-                  },
-                  child: const Text("تحديد موعد العملية"))
+                onPressed: () => _showDatePicker(context),
+                child: const Text("تحديد موعد العملية"),
+              ),
             ],
           ),
         ),
@@ -162,10 +140,38 @@ class PatientDisplayScreen extends StatelessWidget {
     );
   }
 
-  Future<Map<String, dynamic>?> _fetchData() async {
-    var listOfDocuments = await FireStoreService()
-        .getDocumentsByField(doctorsCollection, "name", patientModel.doctor);
-    return List.generate(
-        listOfDocuments.length, (index) => listOfDocuments[index].data()).first;
+  void _showDatePicker(BuildContext context) {
+    final PatientDisplayController controller =
+        Get.find<PatientDisplayController>();
+    controller.fetchData(patientModel.doctor);
+    Get.bottomSheet(
+      Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            ListTile(
+              title: const Text('تواريخ متاحة:'),
+            ),
+            Divider(),
+            Obx(() => controller.formattedDates.isEmpty
+                ? const CircularProgressIndicator()
+                : ListView.builder(
+                    itemCount: controller.formattedDates.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(controller.formattedDates[index]),
+                        leading: const Icon(Icons.date_range),
+                        onTap: () {
+                          // Handle date selection
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  )),
+          ],
+        ),
+      ),
+    );
   }
 }
