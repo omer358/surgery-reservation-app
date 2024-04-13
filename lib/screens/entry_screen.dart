@@ -92,7 +92,7 @@ class EntryScreen extends StatelessWidget {
   Widget _buildSearchButton() {
     return Obx(() => controller.isLoading.value
         ? const CircularProgressIndicator()
-        : Container(
+        : SizedBox(
             width: 200,
             height: 50,
             child: ElevatedButton(

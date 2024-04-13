@@ -6,8 +6,7 @@ import 'package:surgery_picker/models/patient_model.dart';
 class PatientDisplayScreen extends StatelessWidget {
   final PatientModel patientModel;
 
-  const PatientDisplayScreen({Key? key, required this.patientModel})
-      : super(key: key);
+  const PatientDisplayScreen({super.key, required this.patientModel});
 
   @override
   Widget build(BuildContext context) {
@@ -149,22 +148,23 @@ class PatientDisplayScreen extends StatelessWidget {
         color: Colors.white,
         child: Column(
           children: [
-            ListTile(
-              title: const Text('تواريخ متاحة:'),
+            const ListTile(
+              title:  Text('تواريخ متاحة:'),
             ),
-            Divider(),
+            const Divider(),
             Obx(() => controller.formattedDates.isEmpty
                 ? const CircularProgressIndicator()
                 : ListView.builder(
                     itemCount: controller.formattedDates.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
+
                       return ListTile(
                         title: Text(controller.formattedDates[index]),
                         leading: const Icon(Icons.date_range),
                         onTap: () {
                           // Handle date selection
-                          Navigator.pop(context);
+                          Get.back();
                         },
                       );
                     },
