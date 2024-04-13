@@ -1,7 +1,9 @@
-import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intle;
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:surgery_picker/constants.dart';
 import 'package:surgery_picker/models/patient_model.dart';
-import 'package:surgery_picker/services/notification_service.dart';
+import 'package:surgery_picker/services/firestore_service.dart';
 
 class PatientDisplayScreen extends StatelessWidget {
   final PatientModel patientModel;
@@ -80,11 +82,11 @@ class PatientDisplayScreen extends StatelessWidget {
                         children: [
                           const Text(
                             "العملية المحددة: ",
-                            style: TextStyle(fontSize: 20),
+                            style: TextStyle(fontSize: 16),
                           ),
                           Text(
                             patientModel.surgeryType,
-                            style: const TextStyle(fontSize: 20),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ],
                       ),
@@ -93,11 +95,11 @@ class PatientDisplayScreen extends StatelessWidget {
                         children: [
                           const Text(
                             "الطبيب: ",
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 16),
                           ),
                           Text(
                             patientModel.doctor,
-                            style: const TextStyle(fontSize: 18),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ],
                       ),
@@ -108,13 +110,13 @@ class PatientDisplayScreen extends StatelessWidget {
                         children: [
                           const Text(
                             "تاريخ العملية: ",
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 16),
                           ),
                           Text(
                             patientModel.specifiedDate.isEmpty
                                 ? "غير مُحدد"
                                 : patientModel.specifiedDate,
-                            style: const TextStyle(fontSize: 18),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ],
                       ),
@@ -127,13 +129,30 @@ class PatientDisplayScreen extends StatelessWidget {
               ),
               ElevatedButton(
                   onPressed: () async {
-                    final date = await showRangePickerDialog(
-                      context: context,
-                      minDate: DateTime(2021, 1, 1),
-                      maxDate: DateTime(2023, 12, 31),
-                    );
-                    NotificationService().showNotification(
-                        title: "زمن العملية", body: date.toString());
+                    var fetchData = await _fetchData();
+                    List<dynamic> availableDates = fetchData?["avilable_dates"];
+                    print(availableDates);
+                    // Format timestamps
+                    List<String> formattedDates =
+                        availableDates.map((timestamp) {
+                      DateTime dateTime = timestamp.toDate();
+                      String formattedDate =
+                          intle.DateFormat('EEEE, MMM dd, yyyy').format(dateTime);
+                      return formattedDate;
+                    }).toList();
+                    showMaterialModalBottomSheet(
+                        context: context,
+                        builder: (context) => Container(
+                              padding: const EdgeInsets.all(8),
+                              child: ListView.builder(
+                                  itemBuilder: (buildContext, index) =>
+                                      ListTile(
+                                        title: Text(formattedDates[index]),
+                                        leading: Icon(Icons.date_range),
+                                        onTap: () {},
+                                      ),
+                                  itemCount: formattedDates.length),
+                            ));
                   },
                   child: const Text("تحديد موعد العملية"))
             ],
@@ -141,5 +160,12 @@ class PatientDisplayScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<Map<String, dynamic>?> _fetchData() async {
+    var listOfDocuments = await FireStoreService()
+        .getDocumentsByField(doctorsCollection, "name", patientModel.doctor);
+    return List.generate(
+        listOfDocuments.length, (index) => listOfDocuments[index].data()).first;
   }
 }
