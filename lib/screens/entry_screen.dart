@@ -7,6 +7,8 @@ import 'package:surgery_picker/controllers/entry_screen_controller.dart';
 class EntryScreen extends StatelessWidget {
   final EntryScreenController controller = Get.put(EntryScreenController());
 
+   EntryScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,5 +106,4 @@ class EntryScreen extends StatelessWidget {
             ),
           ));
   }
-
 }
