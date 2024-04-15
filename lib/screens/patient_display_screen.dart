@@ -1,12 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:surgery_picker/controllers/entry_screen_controller.dart';
 import 'package:surgery_picker/controllers/patient_display_controller.dart';
 import 'package:surgery_picker/models/patient_model.dart';
 
 class PatientDisplayScreen extends StatelessWidget {
   final PatientModel patientModel;
+  final EntryScreenController entryScreenController = Get.find<EntryScreenController>();
 
-  const PatientDisplayScreen({super.key, required this.patientModel});
+  PatientDisplayScreen({super.key, required this.patientModel});
 
   @override
   Widget build(BuildContext context) {
@@ -113,12 +117,17 @@ class PatientDisplayScreen extends StatelessWidget {
                             "تاريخ العملية: ",
                             style: TextStyle(fontSize: 16),
                           ),
-                          Text(
-                            patientModel.specifiedDate.isEmpty
-                                ? "غير مُحدد"
-                                : patientModel.specifiedDate,
-                            style: const TextStyle(fontSize: 16),
-                          ),
+                          Obx(() {
+                            log(entryScreenController.patient.value.toString());
+                            return Text(
+                              entryScreenController
+                                      .patient.value.specifiedDate.isEmpty
+                                  ? "غير مُحدد"
+                                  : entryScreenController
+                                      .patient.value.specifiedDate,
+                              style: const TextStyle(fontSize: 16),
+                            );
+                          }),
                         ],
                       ),
                     ],

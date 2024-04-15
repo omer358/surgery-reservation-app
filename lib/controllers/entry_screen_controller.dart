@@ -10,6 +10,7 @@ class EntryScreenController extends GetxController {
   final TextEditingController patientIdController = TextEditingController();
   final RxBool buttonClicked = false.obs;
   final RxBool isLoading = false.obs;
+  final Rx<PatientModel> patient = PatientModel(id: '', name: '', specifiedDate: '', surgeryType: '', doctor: '').obs;
 
   void resetButtonClicked() {
     buttonClicked.value = false;
@@ -24,8 +25,9 @@ class EntryScreenController extends GetxController {
     isLoading.value = false;
 
     if (patientById != null && patientById.exists) {
+      patient.value =  PatientModel.fromSnapshot(patientById);
       Get.to(PatientDisplayScreen(
-          patientModel: PatientModel.fromSnapshot(patientById)));
+          patientModel: patient.value));
     } else {
       Get.defaultDialog(
         title: "المريض غير موجود",
