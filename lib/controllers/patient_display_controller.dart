@@ -1,14 +1,15 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:surgery_picker/constants.dart';
+import 'package:surgery_picker/controllers/entry_screen_controller.dart';
 import 'package:surgery_picker/services/firestore_service.dart';
 
 import '../models/patient_model.dart';
 
 class PatientDisplayController extends GetxController {
   final RxList<String> formattedDates = <String>[].obs;
+  final EntryScreenController _entryScreenController =
+      Get.find<EntryScreenController>();
 
   Future<void> fetchData(String doctorName) async {
     final listOfDocuments = await FireStoreService()
@@ -27,10 +28,9 @@ class PatientDisplayController extends GetxController {
   }
 
   void reserveForSurgery(PatientModel patient, int index) {
-    PatientModel newPatient =
+    _entryScreenController.patient.value =
         patient.copyWith(specifiedDate: formattedDates[index]);
-    log(newPatient.toString());
-    FireStoreService()
-        .updateData(newPatient.toMap(), patient.id, patientsCollection);
+    FireStoreService().updateData(_entryScreenController.patient.value.toMap(),
+        patient.id, patientsCollection);
   }
 }
