@@ -8,15 +8,13 @@ import 'package:surgery_picker/models/patient_model.dart';
 
 class PatientDisplayScreen extends StatelessWidget {
   final PatientModel patientModel;
-  final EntryScreenController entryScreenController = Get.find<EntryScreenController>();
+  final EntryScreenController _entryScreenController = Get.find<EntryScreenController>();
+  final PatientDisplayController _patientDisplayController = Get.put(PatientDisplayController());
 
   PatientDisplayScreen({super.key, required this.patientModel});
 
   @override
   Widget build(BuildContext context) {
-    final PatientDisplayController controller =
-        Get.put(PatientDisplayController());
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("بيانات المريض"),
@@ -118,12 +116,12 @@ class PatientDisplayScreen extends StatelessWidget {
                             style: TextStyle(fontSize: 16),
                           ),
                           Obx(() {
-                            log(entryScreenController.patient.value.toString());
+                            log(_entryScreenController.patient.value.toString());
                             return Text(
-                              entryScreenController
+                              _entryScreenController
                                       .patient.value.specifiedDate.isEmpty
                                   ? "غير مُحدد"
-                                  : entryScreenController
+                                  : _entryScreenController
                                       .patient.value.specifiedDate,
                               style: const TextStyle(fontSize: 16),
                             );
@@ -149,9 +147,7 @@ class PatientDisplayScreen extends StatelessWidget {
   }
 
   void _showDatePicker(BuildContext context) {
-    final PatientDisplayController controller =
-        Get.find<PatientDisplayController>();
-    controller.fetchData(patientModel.doctor);
+    _patientDisplayController.fetchAvailableSurgeryDates(patientModel.doctor);
     Get.bottomSheet(
       Container(
         color: Colors.white,
@@ -161,14 +157,14 @@ class PatientDisplayScreen extends StatelessWidget {
               title: Text('تواريخ متاحة:'),
             ),
             const Divider(),
-            Obx(() => controller.formattedDates.isEmpty
+            Obx(() => _patientDisplayController.formattedDates.isEmpty
                 ? const CircularProgressIndicator()
                 : ListView.builder(
-                    itemCount: controller.formattedDates.length,
+                    itemCount: _patientDisplayController.formattedDates.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       String formattedDateTime =
-                          controller.formattedDates[index];
+                      _patientDisplayController.formattedDates[index];
 
                       // Assuming formattedDateTime is in the format "Month Day, Year"
                       // You can modify this based on your actual formatted date
@@ -183,7 +179,7 @@ class PatientDisplayScreen extends StatelessWidget {
                         subtitle: Text(formattedTime),
                         leading: const Icon(Icons.date_range),
                         onTap: () {
-                          controller.reserveForSurgery(patientModel, index);
+                          _patientDisplayController.reserveForSurgery(patientModel, index);
                           Get.back();
                         },
                       );
