@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:surgery_picker/firebase_options.dart';
 import 'package:surgery_picker/screens/entry_screen.dart';
-import 'package:surgery_picker/services/notification_service.dart';
 
 Future<void> main() async {
   // Ensure that widgets are initialized
@@ -13,9 +12,6 @@ Future<void> main() async {
   // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initializeDateFormatting('ar');
-
-  // Initialize notification service
-  NotificationService().initNotification();
 
   runApp(const MyApp());
 }
