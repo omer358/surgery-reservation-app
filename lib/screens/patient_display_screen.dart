@@ -8,10 +8,12 @@ import 'package:surgery_picker/models/patient_model.dart';
 
 class PatientDisplayScreen extends StatelessWidget {
   final PatientModel patientModel;
-  final EntryScreenController _entryScreenController = Get.find<EntryScreenController>();
-  final PatientDisplayController _patientDisplayController = Get.put(PatientDisplayController());
+  final EntryScreenController _entryScreenController =
+      Get.find<EntryScreenController>();
+  final PatientDisplayController _patientDisplayController =
+      Get.put(PatientDisplayController());
 
-  PatientDisplayScreen({Key? key, required this.patientModel}) : super(key: key);
+  PatientDisplayScreen({super.key, required this.patientModel});
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +89,9 @@ class PatientDisplayScreen extends StatelessWidget {
         Obx(() {
           log(_entryScreenController.patient.value.toString());
           return Text(
-            _entryScreenController.patient.value.specifiedDate.isEmpty ? "غير مُحدد" : _entryScreenController.patient.value.specifiedDate,
+            _entryScreenController.patient.value.specifiedDate.isEmpty
+                ? "غير مُحدد"
+                : _entryScreenController.patient.value.specifiedDate,
             style: const TextStyle(fontSize: 16),
           );
         }),
@@ -106,8 +110,11 @@ class PatientDisplayScreen extends StatelessWidget {
 
   void _showDatePicker(BuildContext context) {
     _patientDisplayController.fetchAvailableSurgeryDates(patientModel.doctor);
-    Get.bottomSheet(
-      Container(
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      useSafeArea: true,
+      builder: (BuildContext context) => Container(
         color: Colors.white,
         child: Column(
           children: [
@@ -129,7 +136,8 @@ class PatientDisplayScreen extends StatelessWidget {
       itemCount: _patientDisplayController.formattedDates.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        String formattedDateTime = _patientDisplayController.formattedDates[index];
+        String formattedDateTime =
+            _patientDisplayController.formattedDates[index];
         String formattedDate = formattedDateTime.split(' - ')[0];
         String formattedTime = formattedDateTime.split(' - ')[1].split(' ')[0];
         return ListTile(

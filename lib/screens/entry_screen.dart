@@ -45,7 +45,7 @@ class EntryScreen extends StatelessWidget {
     return const Directionality(
       textDirection: TextDirection.rtl,
       child: Text(
-        "مرحبا بك في تطبيق حجز العمليات العيون",
+        "مرحبا بك في تطبيق مكة للعيون",
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
       ),
@@ -72,7 +72,7 @@ class EntryScreen extends StatelessWidget {
       onTap: controller.resetButtonClicked,
       decoration: InputDecoration(
         hintTextDirection: TextDirection.rtl,
-        hintText: 'ادخل رقم المريض التعريفي ',
+        hintText: 'ادخل رقم الإستمارة ',
         contentPadding: const EdgeInsets.symmetric(
           vertical: 15.0,
           horizontal: 20.0,
@@ -85,7 +85,7 @@ class EntryScreen extends StatelessWidget {
                 (controller.patientIdController.text.isEmpty ||
                     double.tryParse(controller.patientIdController.text) ==
                         null)
-            ? 'يجب إدخال رقم المريض التعريفي أولاً'
+            ? 'يجب إدخال رقم الإسمتارة أولاً'
             : null,
       ),
     );
