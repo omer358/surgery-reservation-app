@@ -7,7 +7,7 @@ import 'package:surgery_picker/controllers/entry_screen_controller.dart';
 class EntryScreen extends StatelessWidget {
   final EntryScreenController controller = Get.put(EntryScreenController());
 
-   EntryScreen({super.key});
+  EntryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +98,9 @@ class EntryScreen extends StatelessWidget {
             width: 200,
             height: 50,
             child: ElevatedButton(
-              onPressed: controller.handleSearch,
+              onPressed: () {
+                controller.handleSearch();
+              },
               child: const Text(
                 "بحث",
                 style: TextStyle(fontSize: 20),
